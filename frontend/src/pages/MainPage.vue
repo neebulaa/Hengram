@@ -35,7 +35,6 @@ export default defineComponent({
 
 		const getUser = async () => {
 			const response = await fetching("get", "user");
-			console.log(response);
 			if (response.status == 200) {
 				user.value = response.data;
 			}

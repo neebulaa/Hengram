@@ -65,7 +65,6 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
 	if (to.meta.auth) {
 		const { status } = await fetching("get", "users");
-		console.log(status);
 		if (status == 401) {
 			next({ name: "login" });
 		}

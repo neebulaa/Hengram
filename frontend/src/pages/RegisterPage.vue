@@ -96,7 +96,7 @@
 										type="checkbox"
 										id="is_private"
 										name="is_private"
-										v-model="formData.isPrivate"
+										v-model="formData.is_private"
 									/>
 									<label for="is_private"
 										>Private Account</label
@@ -135,7 +135,7 @@ export default defineComponent({
 			username: "",
 			password: "",
 			bio: "",
-			isPrivate: false,
+			is_private: false,
 		});
 
 		const errors = ref({
@@ -143,7 +143,7 @@ export default defineComponent({
 			username: "",
 			password: "",
 			bio: "",
-			isPrivate: false,
+			is_private: false,
 			message: "",
 		});
 
@@ -153,7 +153,7 @@ export default defineComponent({
 				username: "",
 				password: "",
 				bio: "",
-				isPrivate: false,
+				is_private: false,
 				message: "",
 			};
 			const response = await fetching("post", "auth/register", {

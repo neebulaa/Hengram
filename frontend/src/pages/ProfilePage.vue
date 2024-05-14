@@ -115,10 +115,24 @@
 
 			<div
 				class="card py-4"
-				v-if="user.is_your_account && user.posts.length == 0"
+				v-if="
+					user.is_your_account && user.posts && user.posts.length == 0
+				"
 			>
 				<div class="card-body text-center">
 					🙅‍♂️ Currently no posts. Share a post now!
+				</div>
+			</div>
+			<div
+				class="card py-4"
+				v-if="
+					!user.is_your_account &&
+					user.posts &&
+					user.posts.length == 0
+				"
+			>
+				<div class="card-body text-center">
+					🙅‍♂️ This user has not posted anything
 				</div>
 			</div>
 		</div>
@@ -137,20 +151,19 @@ export default defineComponent({
 	setup(props) {
 		const user = ref<
 			User & {
-				is_your_account: boolean;
-				posts_count: number;
-				followers_count: number;
-				following_count: number;
-				posts: Post[];
-				following_status: string;
+				is_your_account?: boolean;
+				posts_count?: number;
+				followers_count?: number;
+				following_count?: number;
+				posts?: Post[];
+				following_status?: string;
 			}
-		>({});
+		>({} as User);
 
 		const getUser = async () => {
 			const response = await fetching("get", `users/${props.username}`);
 			if (response.status == 200) {
 				user.value = response.data.user;
-				console.log(user.value);
 			}
 		};
 
@@ -161,8 +174,8 @@ export default defineComponent({
 			);
 			if (response.status == 200) {
 				user.value.following_status = response.data.status;
-				if(user.value.following_status != 'requested'){
-					user.value.followers_count += 1;
+				if (user.value.following_status != "requested") {
+					(user.value.followers_count as number) += 1;
 				}
 			}
 		};
@@ -174,7 +187,7 @@ export default defineComponent({
 			);
 			if (response.status == 200) {
 				user.value.following_status = "not-following";
-				user.value.followers_count -= 1;
+				(user.value.followers_count as number) -= 1;
 			}
 		};
 
