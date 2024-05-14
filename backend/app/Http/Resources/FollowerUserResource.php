@@ -26,7 +26,7 @@ class FollowerUserResource extends JsonResource
         
         if(auth()->user()->is_private){
             $follow = Follow::where('following_id', auth()->user()->id)->where('follower_id', $this->id)->first();
-            $response['is_requested'] = !$follow->is_accepted ? true : false;
+            $response['is_requested'] = !($follow && $follow->is_accepted) ? true : false;
         }
         
         return $response;

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Follow;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\PostAttachment;
@@ -61,6 +62,36 @@ class DatabaseSeeder extends Seeder
             "password" => "pass123",
             "bio" => "Success is not final, failure is not fatal: It is the courage to continue that counts.",
             "is_private" => true
+        ]);
+
+        Follow::create([
+            "follower_id" => 1,
+            "following_id" => 2,
+            "is_accepted" => false 
+        ]);
+
+        Follow::create([
+            "follower_id" => 2,
+            "following_id" => 5,
+            "is_accepted" => true 
+        ]);
+
+        Follow::create([
+            "follower_id" => 2,
+            "following_id" => 4,
+            "is_accepted" => true 
+        ]);
+
+        Follow::create([
+            "follower_id" => 3,
+            "following_id" => 1,
+            "is_accepted" => true 
+        ]);
+
+        Follow::create([
+            "follower_id" => 4,
+            "following_id" => 5,
+            "is_accepted" => false 
         ]);
 
         Post::factory(30)->create()->each(function ($post) {

@@ -38,9 +38,10 @@ class FollowController extends Controller
         ]);
     }
 
-    public function unfollow(Request $request, User $user){
+    public function unfollow(Request $request, User $user)
+    {
         $follow = Follow::where('follower_id', auth()->user()->id)->where('following_id', $user->id)->first();
-        if(!$follow){
+        if (!$follow) {
             return response([
                 "message" => "You are not following this user"
             ], 422);
@@ -67,7 +68,8 @@ class FollowController extends Controller
         }
     }
 
-    public function following(User $user){
+    public function following(User $user)
+    {
         $following_users = $user->following_users;
         return response([
             "message" => "Get following users success",
@@ -75,8 +77,9 @@ class FollowController extends Controller
         ]);
     }
 
-    public function accept(User $user){
-        if(!auth()->user()->is_private){
+    public function accept(User $user)
+    {
+        if (!auth()->user()->is_private) {
             return response([
                 "message" => "Your account is not private"
             ], 422);
@@ -84,13 +87,13 @@ class FollowController extends Controller
 
         $follow = Follow::where('following_id', auth()->user()->id)->where('follower_id', $user->id)->first();
 
-        if(!$follow){
+        if (!$follow) {
             return response([
                 "message" => "The user is not following you"
             ], 422);
         }
 
-        if($follow->is_accepted){
+        if ($follow->is_accepted) {
             return response([
                 "message" => "Follow request is already accepted"
             ], 422);
@@ -103,7 +106,8 @@ class FollowController extends Controller
         ]);
     }
 
-    public function followers(User $user){
+    public function followers(User $user)
+    {
         $followers = $user->followers;
         return response([
             "message" => "Get followers success",

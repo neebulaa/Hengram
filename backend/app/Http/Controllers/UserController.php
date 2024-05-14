@@ -39,8 +39,8 @@ class UserController extends Controller
             ...$user->toArray(),
             "is_your_account" => auth()->user()->id == $user->id,
             "posts_count" => $posts->count(),
-            "followers_count" => $user->followers()->where('is_accepted', 1)->count(),
-            "following_count" => $user->following_users()->count(),
+            "followers_count" => $user->followers->count(),
+            "following_count" => $user->following_users->count(),
             "posts" => $posts
         ];
 
