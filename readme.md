@@ -1,6 +1,6 @@
 # Hengram - Your simple social media
 
-Hengram is a simple instagram clone where in the website a user can see other user's posts by following the user. User can also register a private account so other users that are not following could not see the posts.
+Hengram is a simple Instagram clone. In this website users can share posts, view others' posts, and follow fellow users. Additionally, users can create private accounts to restrict post visibility to only their followers.
 
 ## 💻 Tech Stacks
 
