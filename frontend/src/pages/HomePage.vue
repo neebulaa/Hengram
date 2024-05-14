@@ -219,6 +219,7 @@ export default defineComponent({
 			});
 
 			if (response.status == 200) {
+				window.scrollTo(0, 0);
 				posts.value = response.data.posts;
 				page.value = Number(response.data.page);
 				totalPage.value = response.data.total_page;

@@ -56,10 +56,73 @@
 							<div class="profile-label">
 								<b>{{ user.followers_count }}</b> followers
 							</div>
+							<div
+								class="profile-list"
+								v-if="
+									(user.is_your_account ||
+										!user.is_private ||
+										user.following_status == 'following') &&
+									followers.length > 0
+								"
+							>
+								<div class="card">
+									<div class="card-body">
+										<div
+											class="profile-user"
+											v-for="follower in followers"
+										>
+											<RouterLink
+												:to="{
+													name: 'profile',
+													params: {
+														username:
+															follower.username,
+													},
+												}"
+												>@{{
+													follower.username
+												}}</RouterLink
+											>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
+
 						<div class="profile-dropdown">
 							<div class="profile-label">
 								<b>{{ user.following_count }}</b> following
+							</div>
+							<div
+								class="profile-list"
+								v-if="
+									(user.is_your_account ||
+										!user.is_private ||
+										user.following_status == 'following') &&
+									following.length > 0
+								"
+							>
+								<div class="card">
+									<div class="card-body">
+										<div
+											class="profile-user"
+											v-for="followingPeople in following"
+										>
+											<RouterLink
+												:to="{
+													name: 'profile',
+													params: {
+														username:
+															followingPeople.username,
+													},
+												}"
+												>@{{
+													followingPeople.username
+												}}</RouterLink
+											>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -143,12 +206,14 @@ import { defineComponent, ref } from "vue";
 import { fetching, getFormattedTime } from "../utils.ts";
 import User from "../types/User.ts";
 import Post from "../types/Post.ts";
+import { useStore } from "vuex";
 export default defineComponent({
 	name: "Profile page",
 	props: {
 		username: String,
 	},
 	setup(props) {
+		const store = useStore();
 		const user = ref<
 			User & {
 				is_your_account?: boolean;
@@ -160,10 +225,30 @@ export default defineComponent({
 			}
 		>({} as User);
 
+		const followers = ref<User[]>([]);
+		const following = ref<User[]>([]);
+
 		const getUser = async () => {
 			const response = await fetching("get", `users/${props.username}`);
 			if (response.status == 200) {
 				user.value = response.data.user;
+			}
+
+			const followerResponse = await fetching(
+				"get",
+				`users/${props.username}/followers`
+			);
+			if (followerResponse.status == 200) {
+				followers.value = followerResponse.data.followers;
+			}
+
+			const followingResponse = await fetching(
+				"get",
+				`users/${props.username}/following`
+			);
+			if (followingResponse.status == 200) {
+				following.value = followingResponse.data.following;
+				console.log(followingResponse.data);
 			}
 		};
 
@@ -176,6 +261,7 @@ export default defineComponent({
 				user.value.following_status = response.data.status;
 				if (user.value.following_status != "requested") {
 					(user.value.followers_count as number) += 1;
+					followers.value.push(store.state.user);
 				}
 			}
 		};
@@ -188,6 +274,9 @@ export default defineComponent({
 			if (response.status == 200) {
 				user.value.following_status = "not-following";
 				(user.value.followers_count as number) -= 1;
+				followers.value = followers.value.filter(
+					(follower) => follower.username != store.state.user.username
+				);
 			}
 		};
 
@@ -198,6 +287,8 @@ export default defineComponent({
 			user,
 			unfollow,
 			getFormattedTime,
+			followers,
+			following,
 		};
 	},
 });
