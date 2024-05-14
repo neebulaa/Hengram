@@ -1,0 +1,121 @@
+a {
+    text-decoration: none;
+    color: inherit;
+    color: #333;
+    cursor: pointer;
+}
+a:hover {
+    text-decoration: underline !important;
+}
+
+.navbar {
+    background: #FFF !important;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+main {
+    position: relative;
+}
+
+.main-sidebar {
+    position: sticky;
+    top: 80px;
+    height: max-content !important;
+}
+
+.explore-people-list, .request-follow-list {
+    max-height: 500px;
+    overflow-y: auto
+}
+
+.profile-label {
+    cursor: default;
+}
+.profile-dropdown {
+    position: relative;
+}
+.profile-dropdown .card {
+    padding-right: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-top: 0.5rem;
+}
+.profile-list {
+    display: none;
+    right: 0;
+    min-width: 180px;
+    position: absolute;
+    z-index: 9;
+}
+.profile-dropdown:hover .profile-list {
+    display: block;
+}
+.profile-user:not(:last-child) {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+.card-images {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+}
+.card-images img {
+    object-fit: cover;
+    scroll-snap-align: start;
+}
+
+.search-container {
+    position: relative;
+}
+
+.search-container .search-box {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    background: white;
+    z-index: 10;
+    padding: 1rem;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    max-height: 500px;
+    overflow-y: auto;
+    overflow: hidden;
+    border-radius: 8px !important;
+}
+
+.search-container .search-box a{
+    display: block;
+}
+
+.search-container .search-box a + a {
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+.search-container .search-box a:not(:last-child){
+    margin-bottom: 1rem;
+}
+
+@media(max-width: 768px){
+    .home-page {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .home-page .main-sidebar {
+        order: -1;
+        position: static;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid #ddd;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1200px;
+    }
+}
