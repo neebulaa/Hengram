@@ -17,8 +17,8 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            "caption" => fake()->sentence(random_int(6, 12)),
-            "user_id" => random_int(1, 3)
+            "caption" => fake()->realText(150),
+            "user_id" => random_int(1, 5)
         ];
     }
 }

@@ -4,9 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Post;
 use App\Models\User;
-use Database\Factories\PostFactory;
+use App\Models\PostAttachment;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Factories\PostFactory;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,29 +24,49 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         User::create([
-            "username" => "richard.roe",
+            "username" => "john.doe",
             "password" => "pass123",
-            "bio" => "Hi i am passionate at coding",
-            "full_name" => "Richard Roe",
+            "bio" => "Let your light shine bright and inspire others.",
+            "full_name" => "John Doe",
             "is_private" => false
         ]);
 
         User::create([
-            "username" => "john.doe",
+            "full_name" => "Richard Roe",
+            "username" => "richard.roe",
+            "bio" => "In a world where you can be anything, be kind.",
             "password" => "pass123",
-            "bio" => "I am john doee the doe 😏!",
-            "full_name" => "John Doe",
             "is_private" => true
         ]);
 
         User::create([
-            "username" => "budi.budiman",
+            "full_name" => "Arielle Reichert",
+            "username" => "arielle",
+            "bio" => "Life is a beautiful journey, embrace it.",
             "password" => "pass123",
-            "bio" => "I am budi 😏!",
-            "full_name" => "Budi Budiman",
+            "is_private" => true
+        ]);
+
+        User::create([
+            "full_name" => "Prof. Idell Renner",
+            "username" => "idellener",
+            "password" => "pass123",
+            "bio" => "Be fearless in the pursuit of what sets your soul on fire.",
             "is_private" => false
         ]);
 
-        Post::factory(30)->create();
+        User::create([
+            "full_name" => "Teagan Kautzer",
+            "username" => "kautzer",
+            "password" => "pass123",
+            "bio" => "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+            "is_private" => true
+        ]);
+
+        Post::factory(30)->create()->each(function ($post) {
+            $post->attachments()->createMany(
+                PostAttachment::factory(random_int(1, 4))->make()->toArray()
+            );
+        });
     }
 }
