@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PostAttachment;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\PostAttachmentResource;
 
 class PostController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, User $user = null)
     {
         $validator = Validator::make($request->all(), [
             "page" => "integer|min:0",
@@ -20,7 +22,7 @@ class PostController extends Controller
             return response([
                 "message" => "Invalid fields",
                 "errors" => $validator->errors()
-            ]);
+            ], 422);
         }
 
         // default value
@@ -33,16 +35,28 @@ class PostController extends Controller
             $validated_data['page'] = 0;
         }
 
-        $user = auth()->user();
+        $validated_data['size'] = intval($validated_data['size']);
+        $validated_data['page'] = intval($validated_data['page']);
 
-        $posts = Post::with(['user', "attachments:id,post_id,storage_path"])->get()->filter(function ($post) use ($user) {
+        $user = $user ?? auth()->user();
+
+        $posts = Post::with(['user', "attachments:id,post_id,storage_path"])->latest()->get()->filter(function ($post) use ($user) {
             return $post->user->id == $user->id || !$post->user->is_private || $post->user->acceptsFollowFrom($user->id);
-        })->slice($validated_data['page'] * $validated_data['size'], $validated_data['size'])->values();
+        });
+        $slicedPosts = $posts->slice($validated_data['page'] * $validated_data['size'], $validated_data['size'])->values();
+
+        $updatedPosts = $slicedPosts->toArray();
+        foreach ($updatedPosts as &$post) {
+            $post['attachments'] = array_map(function ($attachment) {
+                return new PostAttachmentResource(new PostAttachment($attachment));
+            }, $post['attachments']);
+        }
 
         return response([
+            "total_page" => ceil($posts->count() / $validated_data['size']),
             "page" => $validated_data['page'],
             "size" => $validated_data['size'],
-            "posts" => $posts
+            "posts" => $updatedPosts
         ]);
     }
 
@@ -58,7 +72,7 @@ class PostController extends Controller
             return response([
                 "message" => "Invalid fields",
                 "errors" => $validator->errors()
-            ]);
+            ], 422);
         }
 
         $validated_data = $validator->validated();
@@ -80,7 +94,6 @@ class PostController extends Controller
             "message" => "Create post success"
         ]);
     }
-
 
     public function destroy(Post $post)
     {
